@@ -1,0 +1,88 @@
+db.funcionario.insertOne({
+    "_id":"3999344",
+    "cpf": "3999344",
+    "primeiro_nome": "Arnaldo",
+    "nome_meio":"Silva",
+    "salario": "15000",
+   "Data_Nascimento": new Date("1974-04-05"),
+    "sexo": "M"
+}) 
+
+db.funcionario.insertMany([{"Cpf": "33344555587", "Sexo": "M", "Salario": 40000, "Endereco": "Rua da Lapa 34 São Paulo SP", "Nome_Meio": "T", "Dependentes": [{"Sexo": "F", "Parentesco": "Filha", "Data_Nascimento": new Date ("1986-01-05"), "Nome_Dependente": "Alicia"}, {"Sexo": "F", "Parentesco": "Esposa", "Data_Nascimento": new Date ("1958-01-03"), "Nome_Dependente": "Janaína"}, {"Sexo": "M", "Parentesco": "Filho", "Data_Nascimento": new Date ("1983-01-25"), "Nome_Dependente": "Tiago"}], "Ultimo_Nome": "Wong", "Primeiro_Nome": "Fernando", "Cpf_Supervisor": "88866555576", "Data_Nascimento": new Date ("1955-01-12"), "Numero_Departamento": "5"},
+{"Cpf": "44111555587", "Sexo": "M", "Salario": 31000, "Endereco": "Rua Rodrigues Alves 771 Rio de Janeiro RJ", "Nome_Meio": "V", "Dependentes": [{"Sexo": "F", "Parentesco": "Esposa", "Data_Nascimento": new Date ("1986-01-07"), "Nome_Dependente": "Joaquina"}], "Ultimo_Nome": "Teixiera", "Primeiro_Nome": "Ubiratan", "Cpf_Supervisor": "88866555576", "Data_Nascimento": new Date ("1984-01-15"), "Numero_Departamento": "5"}])
+
+db.funcionario.find({},{"“_id": 0})
+
+db.funcionario.find({},{"Primeiro_Nome": 1, "Ultimo_Nome": 1, "Sexo": 1})
+//Rodando esse comando ele me mostrou os campos sexo, último nome e primeiro nome. 
+//Mas o ID ele me mostrou também
+
+
+db.funcionario.find({},{"_id": 0, "Primeiro_Nome": 1," Ultimo_Nome": 1, "Sexo": 1})
+//Agora sim, eu estou vendo sexo, último nome e primeiro nome.
+
+
+db.funcionario.find({},{"_id": 0," Primeiro_Nome": 1, "Ultimo_Nome": 1, "Dependentes.Nome_Dependente": 1})
+// acessando o array
+
+
+db.funcionario.find({},{"Primeiro_Nome": 1, "Ultimo_Nome": 1, "Sexo": 1}).limit(5)
+// ver os cinco primeiros
+
+db.funcionario.find({},{"Primeiro_Nome": 1, "Ultimo_Nome": 1, "Sexo": 1}).sort({"Primeiro_Nome": 1})
+//le está ordenado pelo primeiro nome. Começa com A, depois C, J, L e M. Então está ordenado pelo primeiro nome.
+
+
+db.funcionario.find({},{"Primeiro_Nome": 1, "Ultimo_Nome": 1, "Sexo": 1}).sort({"Primeiro_Nome": -1})
+//Se eu quiser fazer uma ordenação descendente, eu vou mudar o meu parâmetro para “-1”:
+
+
+db.funcionario.find({},{"_id": 0, "Primeiro_Nome": 1, "Ultimo_Nome": 1, "Sexo": 1}).sort({"Primeiro_Nome": -1})
+
+db.funcionario.find({"Sexo": "M"},{"_id": 0, "Primeiro_Nome": 1,"Ultimo_Nome": 1, "Salario": 1})
+//filtrando por sexo
+
+
+db.funcionario.find({"Salario": 31000},{"_id": 0, "Primeiro_Nome": 1, "Ultimo_Nome": 1, "Salario": 1})
+//filtrar por salario
+
+
+db.funcionario.find({"Salario": {$gte: 31000}},{"_id": 0, "Primeiro_Nome": 1, "Salario": 1})
+// salarios maiore sque 
+//$gt -  maior que. 
+//$gte é maior ou igual
+//O $lt é menor e o $lte é menor ou igual.
+
+
+
+db.funcionario.find({"Salario": {$gte: 31000}},{"_id": 0," Primeiro_Nome": 1, "Salario": 1," Data_Nascimento": 1})
+
+db.funcionario.find({"Primeiro_Nome": {$in: ["Luiza","Alice"]}},{"_id": 0, "Primeiro_Nome": 1, "Salario": 1," Data_Nascimento": 1})
+//filtrando nomes
+
+
+db.funcionario.find({},{"_id": 0, "Primeiro_Nome": 1, "Salario": 1, "Numero_Departamento": 1, "Sexo": 1})
+// Vamos pegar todos os funcionários, o primeiro nome, o salário, o número do departamento e o sexo do deparatamento 5
+
+
+db.funcionario.find({"Numero_Departamento": "5"},{"_id": 0,"Primeiro_Nome": 1, "Salario": 1, "Numero_Departamento": 1, "Sexo": 1})
+//aspas duplas, porque número do departamento é uma String.
+
+
+db.funcionario.find({"Numero_Departamento": "5", "Sexo": "M"},{"_id": 0,"Primeiro_Nome": 1, "Salario": 1, "Numero_Departamento": 1," Sexo": 1})
+//filtro com o número do departamento igual a cinco e com o sexo masculino. Ele juntou os filtros em um só. Então agora só estou vendo funcionários do sexo masculino do departamento 5.
+//Então quando eu coloco duas condições simples dentro do primeiro parâmetro do find, ele vai fazer um and
+
+db.funcionario.find({$and: [{"Numero_Departamento": "5"}, {"Sexo": "M"}]},{"_id": 0,"Primeiro_Nome": 1, "Salario": 1, "Numero_Departamento": 1, "Sexo": 1})
+//Então eu tenho dentro do array um parâmetro e um valor. E antes do array tem um and. Vamos executar isso. Eu tenho o mesmo resultado que o anterior.
+//Mas agora eu sei o parâmetro que eu estou usando de condição $and. Então eu posso usar também, se eu quiser, o $or. Então vou substituir o $and pelo $or. 
+//Assim eu vou ver um ou outro.
+
+
+
+db.funcionario.find({$or: [{"Salario": {$gt:30000}}, {"Sexo": "M"}]},{"_id": 0,"Primeiro_Nome": 1," Salario": 1, "Numero_Departamento": 1, "Sexo": 1})
+//Com isso eu estou dizendo que ou o salário é maior que 30 mil, ou o sexo é igual a M
+
+
+db.funcionario.find({Dependentes: {$exists: false}},{"_id": 0, "Primeiro_Nome": 1, "Nome_Meio": 1, "Ultimo_Nome": 1})
+// filtrando os funcionarios que não tem dependentes, {Dependentes: {$exists: false}
